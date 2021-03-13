@@ -1,5 +1,9 @@
 <h1>Show User</h1>
 
+<div class="prof">
+  <img src="<%= Routes.user_path(@conn, :photo, @user) %>" alt="" class="img-fluid">
+</div>
+
 <ul>
 
   <li>

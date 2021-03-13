@@ -1,5 +1,5 @@
 <h1>Show Event</h1>
-
+<%= if invited? @conn do %>
 <ul>
 
   <li>
@@ -17,7 +17,69 @@
     <%= @event.description %>
   </li>
 
+  <li>
+    <strong>Organizer</strong>
+    <%= get_user_name(@event.user_id) %>
+    <div class="comm-prof">
+      <img src="<%= Routes.user_path(@conn, :photo, get_user(@event.user_id)) %>" alt="" class="img-fluid">
+    </div>
+  </li>
+
 </ul>
 
-<span><%= link "Edit", to: Routes.event_path(@conn, :edit, @event) %></span>
+<%= if current_user_id?(@conn, @event.user_id) do %>
+  <span><%= link "Edit", to: Routes.event_path(@conn, :edit, @event) %></span>
+<% end %>
+
+<%= if is_event_owner?(@conn, @event) do %>
+  <h2>Invite a Friend!</h2>
+  <%= if have_current_user?(@conn) do %>
+    <%= render(EventAppWeb.InviteeView, "form.html", changeset: @new_invitee, action: Routes.invitee_path(@conn, :create)) %>
+  <% end %>
+<% end %>
+
+<h3>Invitees</h3>
+<ul>
+  <%= for inv <- @event.invitees do %>
+    <li><%= get_user_name(inv.user_id)%> -- <%= inv.response %></li>
+    <%= if is_current_user_inv?(@conn, inv) do %>
+      <!-- <p><strong>Change Response?</strong></p>
+      <%= render(EventAppWeb.InviteeView, "edit.html", conn: @conn, invitee: inv, changeset: @new_invitee) %> -->
+      <%= link "Change Response", to: Routes.invitee_path(@conn, :edit, inv) %>
+    <% end %>
+  <% end %>
+</ul>
+
+<h3>Responses</h3>
+<ul>
+  <li>Yes: <%= get_yes(@event.invitees) %></li>
+  <li>No: <%= get_no(@event.invitees) %></li>
+  <li>Maybe: <%= get_maybe(@event.invitees) %></li>
+  <li>Haven't responded: <%= get_havent(@event.invitees) %></li>
+</ul>
+
+<h2>Add a Comment!</h2>
+<%= if have_current_user?(@conn) do %>
+  <%= render(EventAppWeb.CommentView, "form.html", changeset: @new_comment, action: Routes.comment_path(@conn, :create)) %>
+<% end %>
+
+<h3>Comments</h3>
+<%= for comm <- @event.comments do %>
+  <div class="card">
+    <div class="card-body">
+      <div class="comm-prof">
+        <img src="<%= Routes.user_path(@conn, :photo, comm.user) %>" alt="" class="img-fluid">
+      </div>
+      <p><strong>Commented by <%= comm.user.name %></strong></p>
+      <p class="card-text"><%= comm.body %></p>
+      <%= if can_delete_comment?(@conn, @event.user_id, comm.user.id) do %>
+        <%= link "Delete", to: Routes.comment_path(@conn, :delete, comm), method: :delete, data: [confirm: "Are you sure?"] %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
 <span><%= link "Back", to: Routes.event_path(@conn, :index) %></span>
+<% end %>
+<%= if !invited?(@conn) do %>
+  <p>You aren't allowed to be here.</p>
+<% end %>

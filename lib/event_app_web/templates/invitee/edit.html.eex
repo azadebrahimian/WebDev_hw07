@@ -1,0 +1,16 @@
+<%= form_for @changeset, Routes.invitee_path(@conn, :update, @invitee), fn f -> %>
+  <%= if @changeset.action do %>
+    <p class="alert alert-danger">
+      Oops, something went wrong! Please check the errors below.
+    </p>
+  <% end %>
+
+  <div class="form-group">
+    <%= select f, :response, ["Yes": "Yes", "Maybe": "Maybe", "No": "No"], class: "form-control" %>
+    <%= error_tag f, :status %>
+  </div>
+
+  <div>
+    <%= submit "Save", class: "btn btn-primary" %>
+  </div>
+<% end %>
