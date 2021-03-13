@@ -1,3 +1,9 @@
+# NOTE
+Most code that helped this assignment be fully functional was taken/based from Nat Tuck's Scratch Repo here: https://github.com/NatTuck/scratch-2021-01/tree/master/notes-4550/11-photoblog
+
+Files affected include: layout/app.html.eex, event/form.html.eex, page/index.html.eex, user/form.html.eex, l
+ib/event_app_web/router.ex, controllers/session_controller.ex, plugs/fetch_session.ex, and lib/event_app/users.ex
+
 # EventApp
 
 To start your Phoenix server:

@@ -1,0 +1,18 @@
+[Unit]
+Description=HW07 Events App
+
+[Service]
+Type=simple
+User=event_app
+Group=event_app
+Restart=on-failure
+Environment=MIX_ENV=prod
+Environment=PORT=4793
+Environment=PROD=true
+Environment=LANG=en_US.UTF-8
+
+WorkingDirectory=/home/event_app/www/events.wumbo.casa/WebDev_hw07
+ExecStart=/bin/bash /home/event_app/www/events.wumbo.casa/WebDev_hw07/start.sh
+
+[Install]
+WantedBy=multi-user.target
